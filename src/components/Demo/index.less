@@ -1,0 +1,53 @@
+.ImgShow {
+  width: 100%;
+  height: calc(100vh);
+  .viewportGrid {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: [row1-start] 33% [row1-start] 33% [row1-start] 33% [end];
+    grid-template-columns: [col1-start] 25% [col1-start] 25% [col1-start] 25% [end];
+
+    .element1_1 {
+      grid-column-start: 1;
+      grid-row-start: 1;
+    }
+    .element1_2 {
+      grid-column-start: 2;
+      grid-row-start: 1;
+    }
+    .element1_3 {
+      grid-column-start: 3;
+      grid-row-start: 1;
+    }
+    .element2_1 {
+      grid-column-start: 1;
+      grid-row-start: 2;
+    }
+    .element2_2 {
+      grid-column-start: 2;
+      grid-row-start: 2;
+    }
+    .element2_3 {
+      grid-column-start: 3;
+      grid-row-start: 2;
+    }
+    .element3_1 {
+      grid-column-start: 1;
+      grid-row-start: 3;
+    }
+    .element3_2 {
+      grid-column-start: 2;
+      grid-row-start: 3;
+    }
+    .element3_3 {
+      grid-column-start: 3;
+      grid-row-start: 3;
+    }
+
+    .cornerstone-canvas,
+    .svg-layer {
+      left: 0;
+    }
+  }
+}
