@@ -12,9 +12,13 @@ import {
 } from "@cornerstonejs/core"
 import { calculateSUVScalingFactors } from "@cornerstonejs/calculate-suv";
 import { initDemo, createImageIdsAndCacheMetaData, setPetColorMapTransferFunctionForVolumeActor, setCtTransferFunctionForVolumeActor, setPetTransferFunctionForVolumeActor } from "./function/helpers"
-import ctToolGroup from './function/cornerstoneAddTools'
+import * as cornerstoneTools from '@cornerstonejs/tools';
+import { ctToolGroup, ptToolGroup, fusionToolGroup } from './function/cornerstoneAddTools'
+import setUpSynchronizers from './function/setUpSynchronizers';
 import axios from 'axios'
 import './index.less'
+
+const { CrosshairsTool } = cornerstoneTools;
 
 let flag = false
 let renderingEngine
@@ -251,13 +255,20 @@ const getVolumeAndRender = async (imageIds, elements, renderingEngineId, renderi
   ctToolGroup.addViewport(viewportIds.CT.AXIAL, renderingEngineId);
   ctToolGroup.addViewport(viewportIds.CT.SAGITTAL, renderingEngineId);
   ctToolGroup.addViewport(viewportIds.CT.CORONAL, renderingEngineId);
-  ctToolGroup.addViewport(viewportIds.PT.AXIAL, renderingEngineId);
-  ctToolGroup.addViewport(viewportIds.PT.SAGITTAL, renderingEngineId);
-  ctToolGroup.addViewport(viewportIds.PT.CORONAL, renderingEngineId);
-  ctToolGroup.addViewport(viewportIds.FUSION.AXIAL, renderingEngineId);
-  ctToolGroup.addViewport(viewportIds.FUSION.SAGITTAL, renderingEngineId);
-  ctToolGroup.addViewport(viewportIds.FUSION.CORONAL, renderingEngineId);
+  ptToolGroup.addViewport(viewportIds.PT.AXIAL, renderingEngineId);
+  ptToolGroup.addViewport(viewportIds.PT.SAGITTAL, renderingEngineId);
+  ptToolGroup.addViewport(viewportIds.PT.CORONAL, renderingEngineId);
+  fusionToolGroup.addViewport(viewportIds.FUSION.AXIAL, renderingEngineId);
+  fusionToolGroup.addViewport(viewportIds.FUSION.SAGITTAL, renderingEngineId);
+  fusionToolGroup.addViewport(viewportIds.FUSION.CORONAL, renderingEngineId);
+  ctToolGroup.setToolPassive(CrosshairsTool.toolName);
+  ptToolGroup.setToolPassive(CrosshairsTool.toolName);
+  fusionToolGroup.setToolPassive(CrosshairsTool.toolName);
   renderingEngine.render()
+
+  return new Promise((resolve, reject) => {
+    resolve()
+  })
 }
 
 export default function Demo() {
@@ -274,6 +285,9 @@ export default function Demo() {
         renderingEngine = new RenderingEngine(renderingEngineId)
         const elements = document.getElementsByClassName("element")
         getVolumeAndRender(value, elements, renderingEngineId, renderingEngine, viewportIds)
+          .then(() => {
+            setUpSynchronizers(renderingEngineId, viewportIds)
+          })
       })
     }
   }, [])
